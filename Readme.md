@@ -19,7 +19,7 @@ const fs = require('fs')
 ## Modo pausado
 
 ```
-const readable = fs.createReadStream('big.txt')
+const streamReadable = fs.createReadStream('big.txt')
 ```
 
 Este trecho abre uma stream e a deixa no modo pausado
@@ -31,7 +31,7 @@ Significa que ele diz, olha, toma ai os dados deste stream
 Este trecho pega o readable que está pausado e com o **.on('data')** começa a receber todos os dados do arquivo em parte e continuamente.
 
 ```
-readable.on('data',data=>{
+streamReadable.on('data',data=>{
     console.log(data.toString())
 })
 ```
@@ -44,14 +44,23 @@ Ao contrŕario do push que empurra os dados pra gente,e este modo, pede os dados
 igual ao pull, sendo que em alguns lugares realmente chamam isso de fazer um pull de dados
 chunk - este termo siginifica, geralmente, que possui uma parte dos dados totais. o pedaço de conteúdo lido pela stream num determinado momento. um punhado de dados.
 
+```
+streamReadable.on("readable", () => {
+  console.log("readable");
+  while ((chunk = streamReadable.read())) {
+    console.log(chunk.toString());
+  }
+});
+```
+
 ## Pausar o push/pull
 
 Se quiser pausar o recebimento de dados em algum ponto utilizar o **.pause()** assim:
 
 ```
-readable.on('data',data=>{
+streamReadable.on('data',data=>{
     console.log(data.toString())
-    readable.pause()
+    streamReadable.pause()
 })
 ```
 
@@ -60,10 +69,10 @@ readable.on('data',data=>{
 Se quiser continuar o recebimento de dados após pausa-lo em algum ponto utilizar o **.resume()** assim:
 
 ```
-readable.on('data',data=>{
+streamReadable.on('data',data=>{
     console.log(data.toString())
-    readable.pause()
-    readable.resume()
+    streamReadable.pause()
+    streamReadable.resume()
 })
 ```
 
@@ -73,4 +82,67 @@ readable.on('data',data=>{
 - O .pause(), pausa (rsrs) o envio/recebimento de dados.
 - O .resume(), continua o recebimento de dados, caso ele tenha sido pausado
 
-fonte: DevPleno (Javascript: Streams (P-1: Readable Streams - https://www.youtube.com/watch?v=PcvJm2QqSS4)
+
+
+# Writable Streams
+
+```
+const fs = require('fs');
+
+const streamWritable = fs.createWriteStream('teste.txt',{
+    flasgs:'w',
+    encoding:'utf8'
+});
+
+streamWritable.write('Escrevendo no arquivo\n')
+streamWritable.end('Finalizou aqui')
+
+```
+
+## Módulo fs
+
+Implementa o módulo stream do Nodejs
+
+```
+const fs = require('fs')
+```
+
+## Criação do arquivo
+
+```
+const streamWritable = fs.createWriteStream('teste.txt',{
+    flags:'w',
+    encoding:'utf8'
+})
+```
+Neste momento o arquivo 'teste.txt' é criado e não possui conteudo
+
+## Flags
+
+ - 'w' -> sobreescrever no arquivo. 
+    - Neste caso ele sobreescreve o que tinha antes, deixando apenas o conteúdo enviado atualmente
+ - 'a' -> adicionar conteúdo ao arquivo.
+    - Neste caso ele mantem o conteúdo antigo, adicionando o conteudo atual no final do conteúdo antigo.
+
+## Escrevendo no arquivo
+
+```
+streamWritable.write('Escrevendo no arquivo\n')
+
+```
+Neste momento o arquivo previamente criado é aberto e o texto 'Escrevendo no arquivo\n' é inserido no mesmo.
+
+## Finalizando o arquivo
+
+```
+streamWritable.end('Finalizou aqui')
+```
+
+Neste momento o arquivo terminou de receber dados e adiciona a frase 'Finalizou aqui'
+
+Ao final da escrita o arquivo teste.txt será gravado com os dados anteriormente escritos no caminho especificado.
+
+
+fonte: DevPleno (Javascript: Streams) 
+ - (P-1: Readable Streams - https://www.youtube.com/watch?v=PcvJm2QqSS4)
+ - (P-2: Writable Streams https://www.youtube.com/watch?v=9fVNChUKfZ4)
