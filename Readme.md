@@ -4,7 +4,7 @@ Em ciência da computação, **stream**, em português **fluxo**, é uma sequên
 
 Os fluxos **são processados de maneira diferente** dos dados em lote - as funções normais não podem operar em fluxos como um todo, pois têm dados potencialmente ilimitados e, formalmente, os fluxos são codatos (potencialmente ilimitados), não dados (que são finitos). Funções que operam em um fluxo, produzindo outro fluxo, são conhecidas como **filtros** e podem ser conectadas em **pipelines**, analogamente à **composição de funções**. Os filtros podem operar em um item de um fluxo de cada vez ou podem basear um item de saída em vários itens de entrada, como uma média móvel.
 
-fonte: [wikipedia: Stream (computação) ](https://pt.wikipedia.org/wiki/Stream_(computa%C3%A7%C3%A3o))
+Fonte: [wikipedia: Stream (computação) ](https://pt.wikipedia.org/wiki/Stream_(computa%C3%A7%C3%A3o))
 
 # Readable Streams
 
@@ -159,7 +159,45 @@ streamReadable.pipe(upperCase).pipe(streamWritable);
 Aqui, le primeiro transforma cada parte (`chunk`) do conteúdo do streamReadable para caixa alta `(.toUpperCase())` e em seguida, envia para o arquivo final, que terá o mesmo texto do original, só que em caixa alta.
 
 
-fonte: DevPleno (Javascript: Streams) 
+Fonte: DevPleno (Javascript: Streams) 
  - [P-1: Readable Streams ](https://www.youtube.com/watch?v=PcvJm2QqSS4)
  - [P-2: Writable Streams](https://www.youtube.com/watch?v=9fVNChUKfZ4)
 - [P-4: Transform Streams](https://www.youtube.com/watch?v=gp7sB7-bPAg&t=24s)
+
+# Pipeline
+
+O pipeline facilita a escrita e leitura de códigos que precisem de encadeamentos de pipe.
+
+## Exemplo sem pipeline
+
+```
+fs.createReadStream('big.txt')
+.on('error',console.error)
+.pipe(upperCase)
+.on('error',console.error)
+.pipe(fs.createWriteStream('big-pipeline.txt'))
+.on('error',console.error)
+.on('finish',()=>console.log('Done!'));
+```
+
+## Exemplo com pipeline
+
+```
+pipeline(
+    fs.createReadStream('big.txt'),
+    upperCase,
+    fs.createWriteStream('big-good-pipeline.txt'),
+    err=>{
+        if(err){
+            console.log('Deu erro',err);
+        }else{
+            console.log('Done!');
+        }
+    }
+)
+
+```
+
+
+Fonte: Waldemar Neto Dev Lab
+- [Node.js Readable Streams v3, sem mais dores de cabeça com pipes](https://www.youtube.com/watch?v=XpGWx7z0b7s)
