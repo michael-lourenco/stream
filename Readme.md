@@ -4,13 +4,13 @@ Em ciência da computação, **stream**, em português **fluxo**, é uma sequên
 
 Os fluxos **são processados de maneira diferente** dos dados em lote - as funções normais não podem operar em fluxos como um todo, pois têm dados potencialmente ilimitados e, formalmente, os fluxos são codatos (potencialmente ilimitados), não dados (que são finitos). Funções que operam em um fluxo, produzindo outro fluxo, são conhecidas como **filtros** e podem ser conectadas em **pipelines**, analogamente à **composição de funções**. Os filtros podem operar em um item de um fluxo de cada vez ou podem basear um item de saída em vários itens de entrada, como uma média móvel.
 
-fonte: wikipedia (https://pt.wikipedia.org/wiki/Stream_(computa%C3%A7%C3%A3o))
+fonte: [wikipedia: Stream (computação) ](https://pt.wikipedia.org/wiki/Stream_(computa%C3%A7%C3%A3o))
 
 # Readable Streams
 
 ## Módulo fs
 
-Implementa o módulo stream do Nodejs
+Implementa o `módulo stream` do Nodejs
 
 ```
 const fs = require('fs')
@@ -42,7 +42,7 @@ Significa que ele diz, olha, eu consigo ler dados deste stream
 
 Ao contrŕario do push que empurra os dados pra gente,e este modo, pede os dados para o stream, ou seja, eu controlo o que recebo.
 igual ao pull, sendo que em alguns lugares realmente chamam isso de fazer um pull de dados
-chunk - este termo siginifica, geralmente, que possui uma parte dos dados totais. o pedaço de conteúdo lido pela stream num determinado momento. um punhado de dados.
+`chunk` - este termo siginifica, geralmente, que possui uma parte dos dados totais. o pedaço de conteúdo lido pela stream num determinado momento. um punhado de dados.
 
 ```
 streamReadable.on("readable", () => {
@@ -78,9 +78,9 @@ streamReadable.on('data',data=>{
 
 ## Observações
 
-- O chunk siginifica "um pedaço dos dados da stream"
-- O .pause(), pausa (rsrs) o envio/recebimento de dados.
-- O .resume(), continua o recebimento de dados, caso ele tenha sido pausado
+- O `chunk` siginifica "um pedaço dos dados da stream"
+- O `.pause()`, pausa (rsrs) o envio/recebimento de dados.
+- O `.resume()`, continua o recebimento de dados, caso ele tenha sido pausado
 
 
 
@@ -101,7 +101,7 @@ streamWritable.end('Finalizou aqui')
 
 ## Módulo fs
 
-Implementa o módulo stream do Nodejs
+Implementa o `módulo stream` do Nodejs
 
 ```
 const fs = require('fs')
@@ -143,6 +143,23 @@ Neste momento o arquivo terminou de receber dados e adiciona a frase 'Finalizou 
 Ao final da escrita o arquivo teste.txt será gravado com os dados anteriormente escritos no caminho especificado.
 
 
+# Transform Streams
+
+Envia as informações de uma arquivo para o outro que será criado.
+
+```
+streamReadable.pipe(streamWritable);
+```
+O `pipe` serve como uma ligação entre o que envia e o que recebe dados.
+Ele pode ser concatenado como no exemplo:
+
+```
+streamReadable.pipe(upperCase).pipe(streamWritable);
+```
+Aqui, le primeiro transforma cada parte (`chunk`) do conteúdo do streamReadable para caixa alta `(.toUpperCase())` e em seguida, envia para o arquivo final, que terá o mesmo texto do original, só que em caixa alta.
+
+
 fonte: DevPleno (Javascript: Streams) 
- - (P-1: Readable Streams - https://www.youtube.com/watch?v=PcvJm2QqSS4)
- - (P-2: Writable Streams https://www.youtube.com/watch?v=9fVNChUKfZ4)
+ - [P-1: Readable Streams ](https://www.youtube.com/watch?v=PcvJm2QqSS4)
+ - [P-2: Writable Streams](https://www.youtube.com/watch?v=9fVNChUKfZ4)
+- [P-4: Transform Streams](https://www.youtube.com/watch?v=gp7sB7-bPAg&t=24s)

@@ -1,7 +1,7 @@
 const fs = require("fs");
 const { setTimeout } = require("timers");
 
-const streamReadable = fs.createReadStream('../big.txt');
+const streamReadable = fs.createReadStream("../big.txt");
 
 //Modo 'data' (push)
 streamReadable.on("data", (data) => {
